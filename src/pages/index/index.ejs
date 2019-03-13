@@ -1,0 +1,16 @@
+<div class="w">
+	<h1>${ pageData.name }</h1>
+	<div>
+		<h3>页面跳转</h3>
+		<a href="./shopIndex.html">to shop.html</a>
+	</div>
+	<div>
+		<h3>引入图片</h3>
+		<img src="${require('../../images/logo.png')}" width="100" alt="logo">
+	</div>
+	<!-- 引入组件 -->
+	<div style="width: 300px;">
+		<h3>引入组件</h3>
+		${ require('@/components/empty/empty.tpl')() }
+	</div>
+</div>

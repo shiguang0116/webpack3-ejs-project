@@ -1,0 +1,8 @@
+<% 
+    let pageData = htmlWebpackPlugin.options.pageData;
+    let pageTpl = pageData.url.split('src/')[1]
+%>
+
+<%= require('@/common/header/header.ejs')({pageData: pageData}) %>
+<%= require('./' + pageTpl)({pageData: pageData}) %>
+<%= require('@/common/footer/footer.ejs')({pageData: pageData}) %>
