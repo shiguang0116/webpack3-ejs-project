@@ -14,3 +14,8 @@ import '@/common/footer/footer.js';
 
 // 全局引入组件（如果想单独引用，在对应的页面js引入即可）
 import '@/components/empty/empty.js';
+
+// 页面实例
+function Page(){
+    this.init();
+}

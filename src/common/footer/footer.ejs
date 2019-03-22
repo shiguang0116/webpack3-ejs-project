@@ -1,4 +1,5 @@
 	<!-- 通用尾部 -->
+	</div>
 	<footer id="footer" class="footer">
 		<div class="w">
 			<div class="flt links">
@@ -12,6 +13,14 @@
 		    </div>
 	    </div>
 	</footer>
+
+	<script>
+		function Page(param){
+			param.init();
+			(typeof param.event === 'function') && param.event();
+			return param;
+		}
+	</script>
 
 	<script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>

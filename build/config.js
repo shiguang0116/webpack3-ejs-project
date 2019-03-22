@@ -21,10 +21,10 @@ module.exports = {
             pathRewrite: { "^/api" : "" }     //后面是重写的新路径
         }
     },
-    // 页面数据（ 配置文件扩展了字段: code|title|template ）
-    pagesData: {
-        "index"         : { "name": "首页" },
-        "shopIndex"     : { "name": "商店" },
-        "shopDetail"    : { "name": "商店详情" }
-    }
+    // 页面数据（ 配置文件扩展了字段: code|title ）
+    // pagesData: {
+    //     "index"         : { "name": "首页" },
+    //     "shopIndex"     : { "name": "商店" },
+    //     "shopDetail"    : { "name": "商店详情" }
+    // }
 };

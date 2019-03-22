@@ -1,20 +1,19 @@
 'use strict';
 
-// 页面
-const page = {
+new Page({
+    el: 'index',
+    data: {
+        
+    },
     init : function(){
-        console.log()
-        this.getList();
-        this.bindEvent();
+        console.log(this.data);
     },
-    getList : function(){
+    event : function(){
+        $('#click').click(function(){
+            alert('clickEvent');
+        });
+    },
+    queryPage : function(){
         
     },
-    bindEvent : function(){
-        
-    },
-};
-
-$(function(){
-    page.init();
 });

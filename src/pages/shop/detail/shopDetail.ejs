@@ -4,14 +4,12 @@
 %>
 
 <!-- 头部 -->
-<%= require('@/common/header/header.ejs')({ page: page }) }
+<%= require('@/common/header/header.ejs')({ title: page.title }) %>
 
 <!-- 主内容 -->
-<div id="page">
-	<div id="${page.code}" class="w">
-		<h1>${ page.title }</h1>
-		<a href="./index.html">to index.html</a>
-	</div>
+<div id="${page.code}" class="w">
+	<h1>${ page.title }</h1>
+	<a href="./index.html">to index.html</a>
 </div>
 
 <!-- 尾部 -->
