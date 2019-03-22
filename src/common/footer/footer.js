@@ -1,5 +1,5 @@
 'use strict';
-import './index.less';
+import './footer.less';
 
 // 通用页面尾部
 const footer = {
@@ -9,7 +9,7 @@ const footer = {
     handleFooter : function(){
         const oFoot = document.getElementById('footer');
         const oBody = document.getElementsByTagName('body')[0];
-        util.handleFooter(oBody,oFoot,64);
+        _util.layout.fixedFooter(oBody,oFoot,64);
     }
 };
 

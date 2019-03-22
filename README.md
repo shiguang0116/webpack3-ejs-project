@@ -1,4 +1,4 @@
-﻿# jquery-webpack-project
+﻿# webpack3-ejs-project
 
 > 一个用webpack3构建，并且使用ejs模板开发的项目
 

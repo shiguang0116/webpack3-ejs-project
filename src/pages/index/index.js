@@ -1,10 +1,9 @@
 'use strict';
 
-import '@/components/empty/empty.js';
-
 // 页面
 const page = {
     init : function(){
+        console.log()
         this.getList();
         this.bindEvent();
     },

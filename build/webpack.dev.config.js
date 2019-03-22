@@ -1,5 +1,5 @@
 /**
- * @description: 
+ * @description: 开发环境配置文件
  * @author: guang.shi <https://blog.csdn.net/guang_s> 
  * @date: 2018-01-09 11:37:39 
  */
@@ -27,7 +27,11 @@ const webpackConfig = merge(webpackBaseConfig, {
         proxy: config.proxyTable
     },
     plugins: [
-        
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("dev")
+            }
+        })
     ]
 });
 

@@ -5,18 +5,12 @@
  */
 'use strict';
 
-const glob    = require('glob');
-const path    = require('path');
+const glob      = require('glob');
+const path      = require('path');
 const colors    = require('colors');
-const config  = require('./config.js');
+const config    = require('./config.js');
 
 const util = {};
-
-util.title = function (code) {
-    const pageJson = require('./pages.json');
-    const pageObj = pageJson[code];
-    return pageObj ? pageObj.name : 'webpack项目';
-};
 
 // 获取入口文件
 util.getEntries = function (globPath) {

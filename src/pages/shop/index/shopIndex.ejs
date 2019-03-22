@@ -1,4 +1,18 @@
-<div class="w">
-	<h1>${ pageData.name }</h1>
-	<a href="./index.html">to index.html</a>
+<% 
+	let page = htmlWebpackPlugin.options.pageData;
+	Object.assign(page, { title: '商店' });
+%>
+
+<!-- 头部 -->
+<%= require('@/common/header/header.ejs')({ page: page }) %>
+
+<!-- 主内容 -->
+<div id="page">
+	<div id="${page.code}" class="w">
+		<h1>${ page.title }</h1>
+		<a href="./index.html">to index.html</a>
+	</div>
 </div>
+
+<!-- 尾部 -->
+<%= require('@/common/footer/footer.ejs')() %>

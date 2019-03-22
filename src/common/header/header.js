@@ -1,5 +1,5 @@
 'use strict';
-import './index.less';
+import './header.less';
 
 // 通用页面头部
 const header = {

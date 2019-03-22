@@ -4,8 +4,13 @@
  * @date: 2018-01-09 13:39:34 
  */
 
+// 引入css
 import './styles/main.less';
 
+// 引入公用js
 import '@/utils/util.js';
-import '@/common/header/index.js';
-import '@/common/footer/index.js';
+import '@/common/header/header.js';
+import '@/common/footer/footer.js';
+
+// 全局引入组件（如果想单独引用，在对应的页面js引入即可）
+import '@/components/empty/empty.js';

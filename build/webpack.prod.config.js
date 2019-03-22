@@ -1,5 +1,5 @@
 /**
- * @description: 
+ * @description: 生产环境配置文件
  * @author: guang.shi <https://blog.csdn.net/guang_s> 
  * @date: 2018-01-09 14:45:24 
  */
@@ -21,6 +21,11 @@ const webpackConfig = merge(webpackBaseConfig, {
         new CleanWebpackPlugin(['dist/*'], {
             root: path.resolve(__dirname, '../'),
             // exclude:  []
+        }),
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("build")
+            }
         })
     ]
 });

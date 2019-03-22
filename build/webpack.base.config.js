@@ -1,5 +1,5 @@
 /**
- * @description: 
+ * @description: webpack基础配置文件
  * @author: guang.shi <https://blog.csdn.net/guang_s> 
  * @date: 2018-01-09 11:37:29 
  */
@@ -62,18 +62,10 @@ const webpackBaseConfig = {
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-                loader: 'url-loader',
+                loader: 'url-loader',   // 把图片编码成base64格式写进页面，从而减少服务器请求。
                 options: {
-                    limit: 10000,
+                    limit: 10000,       // 超过多少字节时使用 file-loader 加载文件
                     name: 'images/[name].[hash:7].[ext]'
-                }
-            },
-            {
-                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-                loader: 'url-loader',
-                options: {
-                    limit: 10000,
-                    name: 'media/[name].[hash:7].[ext]'
                 }
             },
             {
@@ -82,6 +74,14 @@ const webpackBaseConfig = {
                 options: {
                     limit: 10000,
                     name: 'fonts/[name].[hash:7].[ext]'
+                }
+            },
+            {
+                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'media/[name].[hash:7].[ext]'
                 }
             },
             {
@@ -114,13 +114,22 @@ const webpackBaseConfig = {
         },
     },
     plugins: [
-        // 把通用模块打包到 main.js 里面
+        // 把通用模块打包到 main.js/css 里面
         new webpack.optimize.CommonsChunkPlugin({
             name : 'main',
             minChunks: 3,
         }),
         // 把 css 单独打包到文件里
-        new ExtractTextPlugin('css/[name].[contenthash:7].css'),
+        new ExtractTextPlugin({
+            filename: 'css/[name].[contenthash:7].css',
+            // disable: process.env.NODE_ENV === "dev",
+            allChunks: true,
+        }),
+        // new webpack.LoaderOptionsPlugin({ //浏览器加前缀
+        //     options: {
+        //         postcss: [require('autoprefixer')({browsers:['last 5 versions']})]
+        //     }
+        // }),
         // 复制文件
         new CopyWebpackPlugin([
             {
@@ -138,24 +147,20 @@ const webpackBaseConfig = {
 };
 
 // 配置html文件
-const pageObj = util.getEntries('./src/pages/**/*.ejs');
-const baseTitle = ' - webpack项目';
-for(let page in pageObj) {
+const pagesEntries = util.getEntries('./src/pages/**/*.ejs');
+for(let page in pagesEntries) {
     let pageData = {
-        code    : page,
-        name    : util.title(page),
-        title   : util.title(page) + baseTitle,
-        url     : pageObj[page]
+        code : page
     };
     let conf = {
-        template    : './src/main.ejs', // 模板路径
+        pageData    : pageData,
+        template    : pagesEntries[page],
         filename    : page + '.html',   // 打包后的文件路径
         favicon     : './favicon.ico',  // 图标路径
         inject      : true,             // js文件将被放置在body元素的底部
-        // minify      : true,          // 压缩
+        // minify      : true,             // 压缩
         chunks      : ['main', page],   // 只引入 main 和该页面对应的 js/css 文件
-        chunksSortMode: 'manual',       // 控制 chunk 的排序。none | auto（默认）| dependency（依赖）| manual（手动）| {function}
-        pageData    : pageData
+        chunksSortMode: 'manual'        // 控制 chunk 的排序。none | auto（默认）| dependency（依赖）| manual（手动）| {function}
     };
     webpackBaseConfig.plugins.push(new HtmlWebpackPlugin(conf));
 }

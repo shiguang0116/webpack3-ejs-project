@@ -1,5 +1,5 @@
 /**
- * @description: 
+ * @description: 参数配置
  * @author: guang.shi <https://blog.csdn.net/guang_s>
  * @date: 2018-01-09 11:32:56 
  */
@@ -8,10 +8,10 @@
 const path = require('path');
 
 module.exports = {
-	// path
+	// 路径
     assetsRoot: path.resolve(__dirname, '../dist'), // 打包后文件的输出目录 
     assetsPublicPath: '/',      // 指定资源文件引用的目录 
-    // server
+    // 服务
     host: 'localhost', 
     port: 8000, 
     autoOpenPage: 'index.html',
@@ -20,5 +20,11 @@ module.exports = {
             target: "http://192.168.31.234",
             pathRewrite: { "^/api" : "" }     //后面是重写的新路径
         }
+    },
+    // 页面数据（ 配置文件扩展了字段: code|title|template ）
+    pagesData: {
+        "index"         : { "name": "首页" },
+        "shopIndex"     : { "name": "商店" },
+        "shopDetail"    : { "name": "商店详情" }
     }
 };
