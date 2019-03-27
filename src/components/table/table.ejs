@@ -1,0 +1,45 @@
+<% 
+    var el = el || 'table';
+    var actionId = el + '_action';
+    var conId = el + '_con';
+    var tplId = el + '_tpl';
+%>
+
+<div id="${el}" class="table-responsive">
+    <!-- 操作按钮 -->
+    <div id="${actionId}" style="margin: 10px 0">
+        <button type="button" name="delete" class="btn btn-primary btn-sm">批量删除</button>
+        <button type="button" name="edit" class="btn btn-primary btn-sm">批量修改</button>
+        <button type="button" name="reload" class="btn btn-primary btn-sm">刷新</button>
+    </div>
+    <!-- 表格 -->
+    <table id="${conId}" class="table table-bordered table-hover"></table>
+</div>
+
+<!-- 渲染表格 -->
+<script id="${tplId}" type="text/html">
+    <thead>
+        <tr id="table_header">
+            {{each columns item index}}
+            {{if item.visible}}
+                <th>{{@item.title}}</th>
+            {{/if}}
+            {{/each}}
+        </tr>
+    </thead>
+    <tbody>
+        {{if listData.length}}
+            {{each listData row index}}
+            <tr data-row="{{row}}">
+                {{each columns item}}
+                {{if item.visible}}
+                    <td>{{@ item.cellTemplate | handerTpl row }}</td>
+                {{/if}}
+                {{/each}}
+            </tr>
+            {{/each}}
+        {{else}}
+            <tr><td colspan="{{columns.length}}">没有数据</td></tr>
+        {{/if}}
+    </tbody>
+</script>

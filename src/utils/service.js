@@ -146,8 +146,8 @@
             url: 'service/userService/logout',
             success: function(res){
                 // 清空本地存储
-                _util.cookie.remove('userId');
-                _util.cookie.remove('username');
+                _util.cookie.remove('user_id');
+                _util.cookie.remove('user_name');
                 _util.cookie.remove('is_login');
                 _util.storage.clear();
             }
@@ -164,6 +164,12 @@
     /********************************************* menu 菜单 ***************************************************/
 
     s.menu = {};
+
+    /********************************************* enumeration 枚举 ***************************************************/
+
+    s.enumeration = {
+        bill_status : { "0": "初始", "1": "提交", "2": "审核" }
+    };
 
     window._sv = s;
 })(window);

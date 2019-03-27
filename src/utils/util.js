@@ -459,6 +459,19 @@
         input.select();
         window.document.execCommand("copy");
     };
+
+    /**
+    * @description 去除字符串前后的引号
+    * @param {String} str 源字符串
+    * @param {String} 
+    */
+    u.string.removeQuotation = function (str) {
+        if (!u.isString(str)) return str;
+
+        var reg = /^[\'\"]+|[\'\"]+$/g;
+        str = str.replace(reg, "");
+        return str;
+    };
     
     /********************************************* number 数字 ***************************************************/
 

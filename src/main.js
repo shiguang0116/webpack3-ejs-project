@@ -7,15 +7,12 @@
 // 引入css
 import './styles/main.less';
 
-// 引入公用js
+// 公用js类
 import '@/utils/util.js';
+import '@/utils/service.js';
+import '@/utils/filter.js';
 import '@/common/header/header.js';
 import '@/common/footer/footer.js';
 
 // 全局引入组件（如果想单独引用，在对应的页面js引入即可）
 import '@/components/empty/empty.js';
-
-// 页面实例
-function Page(){
-    this.init();
-}
