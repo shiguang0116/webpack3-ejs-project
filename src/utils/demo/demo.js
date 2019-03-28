@@ -137,6 +137,29 @@ console.group("_util.isEqual()");
     console.log(_util.isEqual(source1, source3));     // false
 console.groupEnd();
 
+// _util.copy()
+console.group("_util.copy()"); 
+    var s1 = { id: 'a' };
+    var s2 = s1;
+    s2.status = '2';
+    console.log(s1);    // {id: "a", status: "2"}
+    
+    var s1 = { id: 'a' };
+    var s2 = _util.copy(s1);
+    s2.status = '2';
+    console.log(_util.copy(s1));    // {id: "a"}
+    
+    var s1 = [{ id: 'a' }];
+    var s2 = s1;
+    s2.push({ id: 'b' });
+    console.log(_util.copy(s1));    // [{id: "a"}, {id: "b"}]
+    
+    var s1 = [{ id: 'a' }];
+    var s2 = _util.copy(s1);
+    s2.push({ id: 'b' });
+    console.log(_util.copy(s1));    // [{id: "a"}]
+console.groupEnd();
+
 /********************************************* string 字符串 ***************************************************/
 
 // _util.trim()
@@ -180,10 +203,10 @@ console.group("_util.string.split()");
     console.log(_util.string.split('a,s,d', ','));   // ["a", "s", "d"]
 console.groupEnd();
 
-// _util.string.next()
-console.group("_util.string.next()"); 
-    console.log(_util.string.next('0001'));     // '0002'
-    console.log(_util.string.next('XM0001'));   // 'XM0002'
+// _util.string.getNext()
+console.group("_util.string.getNext()"); 
+    console.log(_util.string.getNext('0001'));     // '0002'
+    console.log(_util.string.getNext('XM0001'));   // 'XM0002'
 console.groupEnd();
 
 /********************************************* number 数字 ***************************************************/
@@ -407,10 +430,12 @@ console.group("_util.array.group()");
 console.groupEnd();
 
 // _util.array.remove()
-arr = ['sg', '', null, undefined];
-_util.array.remove(arr);
+arr = ['s', 'g', '', null, undefined, { id:'q', status: '1'} ];
 console.group("_util.array.remove()");
-    console.log(arr);   // ["sg"]
+    _util.array.remove(arr);
+    console.log(arr);   // ["s", "g", { id:'q', status: '1'}]
+    _util.array.remove(arr, ['s', { id:'q' }]);
+    console.log(arr);   // ["g"]
 console.groupEnd();
 
 // _util.array.clear()
@@ -459,7 +484,15 @@ console.group("_util.object.select()");
 console.groupEnd();
 
 // _util.object.remove()
+obj = {
+    name: 'guang',
+    email: '123456@qq.com',
+    phone: '13566668888',
+    wrong: '',
+    wrong2: undefined,
+};
 console.group("_util.object.remove()");
+    console.log(_util.object.remove(obj)); // {name: "guang", email: "123456@qq.com", phone: "13566668888"}
     console.log(_util.object.remove(obj, ['name', 'phone'])); // {email: "123456@qq.com"}
 console.groupEnd();
 

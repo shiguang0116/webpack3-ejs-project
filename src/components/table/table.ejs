@@ -1,11 +1,11 @@
 <% 
-    var el = el || 'table';
-    var actionId = el + '_action';
-    var conId = el + '_con';
-    var tplId = el + '_tpl';
+    var id = id || 'table';
+    var actionId = id + '_action';
+    var conId = id + '_con';
+    var tplId = id + '_tpl';
 %>
 
-<div id="${el}" class="table-responsive">
+<div id="${id}" class="table-responsive">
     <!-- 操作按钮 -->
     <div id="${actionId}" style="margin: 10px 0">
         <button type="button" name="delete" class="btn btn-primary btn-sm">批量删除</button>

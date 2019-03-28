@@ -276,7 +276,13 @@
         else if(u.isArray(source)){
             ret = [];
             u.forEach(source, function (i, item) {
-                ret.push(item);
+                if(u.isObject(item) || u.isArray(item)){
+                    var newItem = u.copy(item);
+                    ret.push(newItem);
+                }
+                else{
+                    ret.push(item);
+                }
             });
         }
         else return source;
@@ -427,11 +433,22 @@
     };
 
     /**
+     * @description 复制文本到剪切板
+     * @param text {String} 需要复制的文本内容
+     */
+    u.string.copy = function (text) {
+        var input = window.document.createElement('input');
+        input.value = text;
+        input.select();
+        window.document.execCommand("copy");
+    };
+
+    /**
      * @description 字母和数字混合的编号自加1（以数字结尾）
      * @param {String} code 编号。例：'XM0001'
      * @return {String} 编号+1。例：'XM0002'
      */
-    u.string.next = function (code){
+    u.string.getNext = function (code){
         var part1, part2, splitStr = '';
         if (/[a-z]/i.test(code)) {
             var x = code.match(/[a-z]/ig);
@@ -447,30 +464,6 @@
         var zero = (part2 + '.').split(int + '.')[0];
         var newPart2 = zero + (int + 1).toString();
         return part1 + newPart2;
-    };
-
-    /**
-     * @description 复制文本到剪切板
-     * @param text {String} 需要复制的文本内容
-     */
-    u.string.copy = function (text) {
-        var input = window.document.createElement('input');
-        input.value = text;
-        input.select();
-        window.document.execCommand("copy");
-    };
-
-    /**
-    * @description 去除字符串前后的引号
-    * @param {String} str 源字符串
-    * @param {String} 
-    */
-    u.string.removeQuotation = function (str) {
-        if (!u.isString(str)) return str;
-
-        var reg = /^[\'\"]+|[\'\"]+$/g;
-        str = str.replace(reg, "");
-        return str;
     };
     
     /********************************************* number 数字 ***************************************************/
@@ -855,12 +848,12 @@
     /**
      * @description 删除数组中 指定的元素 或 不合法的值（undefined, null, '')
      * @param {Array} source 原数组
-     * @param {*} value 被删除的元素，不传则删除不合法的值
+     * @param {*} values 被删除的元素集合，不传则删除不合法的值
      */
-    u.array.remove = function (array, value) {
+    u.array.remove = function (array, values) {
         if (u.isEmpty(array)) return [];
         // 删除不合法的值
-        if (u.isEmpty(value)) {
+        if (u.isEmpty(values)) {
             var i = array.length;
             while (i--) {
                 var item = array[i];
@@ -871,10 +864,12 @@
         }
         // 删除指定的元素
         else {
-            var index = u.array.indexOf(array, value);
-            if (index > -1) array.splice(index, 1);
+            if(!u.isArray(values)) values = [values];
+            u.forEach(values, function(i, value){
+                var index = u.array.indexOf(array, value);
+                if (index > -1) array.splice(index, 1);
+            });
         }
-        return array;
     };
 
     /**
@@ -952,7 +947,6 @@
                 obj1[key] = obj2[key];
             }
         }
-        return obj1;
     };
 
     /**
@@ -1000,60 +994,6 @@
     };
 
     /**
-     * @description 删除对象中的属性
-     * @param {Object} obj 对象
-     * @param {String Array} keys 属性名集合
-     * @return {Object} 新对象 
-     */
-    u.object.remove = function (obj, keys) {
-        if (u.isEmpty(obj) || u.isEmpty(keys)) return obj;
-
-        var es6 = true;
-        if (!u.isArray(keys)) keys = [keys];
-        u.forEach(keys, function (i, key) {
-            try {
-                delete obj[key];
-            } catch (e) { 
-                es6 = false;
-                return false;
-            }
-        });
-        if(es6) return obj;
-        else{
-            var ret = {};
-            u.forEach(obj, function (key, value) {
-                if(keys.indexOf(key) == -1){
-                    ret[key] = value;
-                }
-            });
-            return ret;
-        }
-    };
-
-    /**
-     * @description 清空对象
-     * @param {Object} obj 源对象
-     * @param {Array} keys 属性名集合，不传则清空全部属性
-     * @return {Object} 清空后的对象
-     */
-    u.object.clear = function (obj, keys){
-        if (u.isEmpty(obj)) return {};
-
-        if(keys){
-            if(!u.isArray(keys)) keys = [keys];
-            u.forEach(keys, function(i, key){
-                obj[key] = '';
-            });
-        }
-        else{
-            for (var key in obj) {
-                obj[key] = '';
-            }
-        }
-        return obj;
-    };
-
-    /**
      * @description 序列化对象
      * @param {Object} paramObj 源对象
      * @return {String}
@@ -1086,6 +1026,77 @@
         }
         ret = ret.substring(0, ret.length - 1);
         return ret;
+    };
+
+    /**
+     * @description 删除对象中指定的属性 或 值为空的属性（undefined, null, '')
+     * @param {Object} obj 源对象
+     * @param {String Array} keys 属性名集合，不传则删除为空的属性
+     * @return {Object} 
+     */
+    u.object.remove = function (obj, keys) {
+        if (u.isEmpty(obj)) return obj;
+
+        var ret = {};
+        var es6 = true;
+        if(!u.isEmpty(keys)){
+            if (!u.isArray(keys)) keys = [keys];
+            u.forEach(keys, function (i, key) {
+                try {
+                    delete obj[key];
+                } catch (e) { 
+                    es6 = false;
+                    return false;
+                }
+            });
+            if(es6) return obj;
+            else{
+                u.forEach(obj, function (key, value) {
+                    if(keys.indexOf(key) == -1){
+                        ret[key] = value;
+                    }
+                });
+                return ret;
+            }
+        }
+        else {
+            u.forEach(obj, function (key, value) {
+                var wrongful = (value === null || value === undefined || value === '');
+                try {
+                    if(wrongful) delete obj[key];
+                } catch (e) { 
+                    es6 = false;
+                    if(!wrongful) {
+                        ret[key] = value;
+                    }
+                }
+            });
+            if(es6) return obj;
+            else return ret;
+        }
+    };
+
+    /**
+     * @description 清空对象
+     * @param {Object} obj 源对象
+     * @param {Array} keys 属性名集合，不传则清空全部属性
+     * @return {Object} 清空后的对象
+     */
+    u.object.clear = function (obj, keys){
+        if (u.isEmpty(obj)) return {};
+
+        if(keys){
+            if(!u.isArray(keys)) keys = [keys];
+            u.forEach(keys, function(i, key){
+                obj[key] = '';
+            });
+        }
+        else{
+            for (var key in obj) {
+                obj[key] = '';
+            }
+        }
+        return obj;
     };
 
     /******************************************** JSON **************************************************/
