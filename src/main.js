@@ -4,23 +4,6 @@
  * @date: 2018-01-09 13:39:34 
  */
 
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// var template = require('art-template');
-// template.config('base', '');
-// template.config('extname', '.html');
-// app.engine('.html', template.__express);
-// app.set('view engine', 'html');
-
-
-
-// 改变解析规则，避免和ejs模板冲突
-// var rule = template.defaults.rules[0];
-// rule.test = new RegExp(rule.test.source.replace('<%', '<\\\?').replace('%>', '\\\?>'));
-
-// 引入页面css
-import './styles/main.less';
-
 // 第三方css库
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -29,6 +12,13 @@ import 'jquery';
 import 'bootstrap';
 import 'art-template/lib/template-web.js';  //客户端渲染
 import '@babel/polyfill';
+
+// 改变template模板（客户端）原生语法解析规则，避免和ejs模板语法（服务端）冲突
+var rule = template.defaults.rules[0];
+rule.test = new RegExp(rule.test.source.replace('<%', '<\\\?').replace('%>', '\\\?>'));
+
+// 引入页面css
+import './styles/main.less';
 
 // 页面公用js类
 import '@/utils';

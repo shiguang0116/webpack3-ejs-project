@@ -10,7 +10,6 @@ const path                = require('path');
 const ExtractTextPlugin   = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin   = require('html-webpack-plugin');
 const CopyWebpackPlugin   = require('copy-webpack-plugin');
-const template            = require('art-template');
 const util                = require('./util.js');
 const config              = require('./config.js');
 
@@ -156,26 +155,13 @@ const webpackBaseConfig = {
         // 复制文件
         new CopyWebpackPlugin([
             {
-                from: resolve('src/libs/ie8/**/*.js'),
-                to: 'js/ie8.[contenthash:7].js'
-            },
-            {
-                from: resolve('src/libs/ie9/**/*.js'),
-                to: 'js/ie9.[contenthash:7].js'
-            },
-            // {
-            //     from: resolve('src/libs/**/*.js'),
-            //     to: 'js/[name].[ext]',
-            //     toType: 'template',
-            // }
+                from: resolve('src/libs/**/*.js'),
+                to: 'js/[name].[ext]',
+                toType: 'template',
+            }
         ])
     ]
 };
-
-// 模板引擎设置
-template.defaults.extname = '.html';
-// require.extensions['.html'] = template.extension;
-// template.defaults.rules.pop(); // 删除简洁语法，避免和客户端渲染产生冲突（服务端渲染用原生语法）
 
 // 配置html文件
 const pagesEntries = util.getEntries('./src/pages/**/*.ejs');
