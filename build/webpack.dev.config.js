@@ -24,6 +24,7 @@ const webpackConfig = merge(webpackBaseConfig, {
         port: config.port,
         open: true,
         openPage: config.autoOpenPage,
+        disableHostCheck: true,
         proxy: config.proxyTable
     },
     plugins: [

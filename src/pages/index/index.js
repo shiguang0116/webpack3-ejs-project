@@ -2,7 +2,7 @@
 
 import Table from '@/components/table/table.js';
 
-new Page({
+let vm = new Page({
     el: 'index',
     data: {
         table: {
@@ -16,7 +16,7 @@ new Page({
                 { field: 'checkbox' },
                 { field: 'code', title: '代码' },
                 { field: 'name', title: '名称' },
-                { field: 'status', title: '状态', cellTemplate: '<span>{{row.status|enumeration bill_status}}</span>' },
+                { field: 'status', title: '状态', cellTemplate: '<span>{{row.status|enumeration "bill_status"}}</span>' },
                 { field: 'channel.name', title: '组织' },
                 { field: 'createTime', title: '创建时间', cellTemplate: '<span>{{row.createTime|dateFormat}}</span>' },
                 {
@@ -98,3 +98,5 @@ new Page({
         return ret;
     }
 });
+
+template.defaults.imports.delete = vm.delete;

@@ -10,6 +10,7 @@ const path                = require('path');
 const ExtractTextPlugin   = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin   = require('html-webpack-plugin');
 const CopyWebpackPlugin   = require('copy-webpack-plugin');
+const template            = require('art-template');
 const util                = require('./util.js');
 const config              = require('./config.js');
 
@@ -24,7 +25,7 @@ const webpackBaseConfig = {
     ),
     output: {
         path        : config.assetsRoot,                // 打包后文件的输出目录 
-        filename    : 'js/[name].[chunkhash:7].js',  // 打包后的文件路径
+        filename    : 'js/[name].[chunkhash:7].js',     // 打包后的文件路径
         publicPath  : config.assetsPublicPath,          // 指定资源文件引用的目录 
     },
     module: {
@@ -42,20 +43,7 @@ const webpackBaseConfig = {
                     fallback: "style-loader",  
                     use: [
                         { loader: 'css-loader' },
-                        { 
-                            loader: 'postcss-loader',
-                            options: {
-                                // plugins: function() {
-                                //     return [
-                                //         //一定要写在require("autoprefixer")前面，否则require("autoprefixer")无效
-                                //         require('postcss-import')(),
-                                //         require("autoprefixer")({
-                                //             "browsers": ["Android >= 4.1", "iOS >= 7.0", "ie >= 8"]
-                                //         })
-                                //     ];
-                                // }
-                            } 
-                        },
+                        { loader: 'postcss-loader' },
                         { loader: 'less-loader' },
                     ]
                 }) 
@@ -91,60 +79,103 @@ const webpackBaseConfig = {
                     loader: 'ejs-loader'
                 }
             },
-            // {
-            //     test: /\.js$/,
-            //     loader: 'babel-loader',
-            //     exclude: /node_modules/
-            // },
-            // {
-            //     test: require.resolve('zepto'),
-            //     loader: 'exports-loader?window.Zepto!script-loader'
-            // }
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/
+            },
+            {
+                test: require.resolve('jquery'), // 查询模块文件名
+                use: [
+                    {
+                        loader: 'expose-loader',
+                        options: '$'
+                    },
+                    {
+                        loader: 'expose-loader',
+                        options: 'jQuery'
+                    }
+                ]
+            },
+            {
+                test: require.resolve('art-template/lib/template-web.js'),
+                use: [
+                    {
+                        loader: 'expose-loader',
+                        options: 'template'
+                    }
+                ]
+            }
         ]
     },
     externals : {
-        'jquery' : 'window.jQuery'  // 在编译时，会把 require('jquery') 替换成 window.jQuery
+        // 在编译时，会把 require('jquery') 替换成 window.jQuery，因此只适用于用script标签引入jQuery的情况
+        // 'jquery' : 'window.jQuery'  
     },
     // 配置路径
     resolve : {
         extensions: ['.js', '.json'],
         alias : {
-            'build' : resolve('build'),
-            '@'     : resolve('src'),
+            'build'     : resolve('build'),
+            '@'         : resolve('src'),
         },
     },
     plugins: [
-        // 把通用模块打包到 main.js/css 里面
+        // 抽出第三方库，命名vendor，不需要加chunkhash，因为他很少变化
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'vendor',
+        //     minChunks: function (module) {
+        //         // 从 node_module 出来的所有模块
+        //         return (
+        //             module.resource &&
+        //             /\.js$/.test(module.resource) &&
+        //             module.resource.indexOf(
+        //                 path.join(__dirname, '/node_modules')
+        //             ) === 0
+        //         );
+        //     }
+        // }),
+        // 抽出mainfest（管理模块交互的文件）
+        new webpack.optimize.CommonsChunkPlugin({ 
+            name: 'manifest',
+            minChunks: Infinity
+        }),
+        // 提取通用模块到 main.js/css 里面
         new webpack.optimize.CommonsChunkPlugin({
             name : 'main',
+            async: 'vendor-async',
+            children: true,
             minChunks: 3,
         }),
-        // 把 css 单独打包到文件里
+        // 提取css
         new ExtractTextPlugin({
             filename: 'css/[name].[contenthash:7].css',
             // disable: process.env.NODE_ENV === "dev",
             allChunks: true,
         }),
-        // new webpack.LoaderOptionsPlugin({ //浏览器加前缀
-        //     options: {
-        //         postcss: [require('autoprefixer')({browsers:['last 5 versions']})]
-        //     }
-        // }),
         // 复制文件
         new CopyWebpackPlugin([
             {
-                from: resolve('src/libs/**/*.js'),
-                to: 'js/[name].[ext]',
-                toType: 'template',
+                from: resolve('src/libs/ie8/**/*.js'),
+                to: 'js/ie8.[contenthash:7].js'
             },
             {
-                from: resolve('src/libs/**/*.css'),
-                to: 'css/[name].[ext]',
-                toType: 'template',
-            }
+                from: resolve('src/libs/ie9/**/*.js'),
+                to: 'js/ie9.[contenthash:7].js'
+            },
+            // {
+            //     from: resolve('src/libs/**/*.js'),
+            //     to: 'js/[name].[ext]',
+            //     toType: 'template',
+            // }
         ])
     ]
 };
+
+// 模板引擎设置
+template.defaults.extname = '.html';
+// require.extensions['.html'] = template.extension;
+// template.defaults.rules.pop(); // 删除简洁语法，避免和客户端渲染产生冲突（服务端渲染用原生语法）
 
 // 配置html文件
 const pagesEntries = util.getEntries('./src/pages/**/*.ejs');
@@ -159,7 +190,7 @@ for(let page in pagesEntries) {
         favicon     : './favicon.ico',  // 图标路径
         inject      : true,             // js文件将被放置在body元素的底部
         // minify      : true,             // 压缩
-        chunks      : ['main', page],   // 只引入 main 和该页面对应的 js/css 文件
+        chunks      : ['vendor', 'manifest', 'main', page],   // 引入公共资源和 该页面对应的 js/css 文件
         chunksSortMode: 'manual'        // 控制 chunk 的排序。none | auto（默认）| dependency（依赖）| manual（手动）| {function}
     };
     webpackBaseConfig.plugins.push(new HtmlWebpackPlugin(conf));

@@ -12,7 +12,8 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'), // 打包后文件的输出目录 
     assetsPublicPath: '/',      // 指定资源文件引用的目录 
     // 服务
-    host: 'localhost', 
+    // host: 'localhost',   // 只可以访问 localhost(127.0.0.1)
+    host: '0.0.0.0',        // 0.0.0.0 代表本机的所有IP地址
     port: 8000, 
     autoOpenPage: 'index.html',
     proxyTable: {

@@ -33,7 +33,7 @@
             <tr data-row="{{row}}">
                 {{each columns item}}
                 {{if item.visible}}
-                    <td>{{@ item.cellTemplate | handerTpl row }}</td>
+                    <td>{{@ item.cellTemplate | renderTpl row 'row' }}</td>
                 {{/if}}
                 {{/each}}
             </tr>
