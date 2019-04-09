@@ -10,8 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // 第三方js库
 import 'jquery';
 import 'bootstrap';
-import 'art-template/lib/template-web.js';  //客户端渲染
-import '@babel/polyfill';
+import 'art-template/lib/template-web.js';  // 客户端模板渲染
+import '@babel/polyfill';                   // 编译es6新增api
 
 // 改变template模板（客户端）原生语法解析规则，避免和ejs模板语法（服务端）冲突
 var rule = template.defaults.rules[0];

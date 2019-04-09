@@ -12,6 +12,11 @@ const config    = require('./config.js');
 
 const util = {};
 
+util.assetsPath = function (_path) {
+    const assetsSubDirectory = config.assetsSubDirectory;
+    return path.posix.join(assetsSubDirectory, _path);
+};
+
 // 获取入口文件
 util.getEntries = function (globPath) {
     let entries = {};

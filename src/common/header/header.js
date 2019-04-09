@@ -1,19 +1,17 @@
 'use strict';
+
 import './header.less';
 
-// 通用页面头部
-const header = {
-    init : function(){
-        this.bindEvent();
-        this.getUserInfo();
-    },
-    bindEvent : function(){
+new Page({
+    el: 'header',
+    data: {
         
+    },
+    init : function(){
+        this.getUserInfo();
     },
     // 加载用户信息
     getUserInfo : function(){
         
     }
-};
-
-header.init();
+});

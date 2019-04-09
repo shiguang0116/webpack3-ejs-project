@@ -73,15 +73,16 @@ const webpackBaseConfig = {
             },
             {
                 test: /\.(ejs|tpl)$/,
-                exclude: /node_modules/,
+                // exclude: /node_modules/,
+                include: [resolve('src')],
                 use: {
                     loader: 'ejs-loader'
                 }
             },
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/
+                include: [resolve('src')],
+                loader: 'babel-loader'
             },
             {
                 test: require.resolve('jquery'), // 查询模块文件名
@@ -120,21 +121,21 @@ const webpackBaseConfig = {
         },
     },
     plugins: [
-        // 抽出第三方库，命名vendor，不需要加chunkhash，因为他很少变化
-        // new webpack.optimize.CommonsChunkPlugin({
-        //     name: 'vendor',
-        //     minChunks: function (module) {
-        //         // 从 node_module 出来的所有模块
-        //         return (
-        //             module.resource &&
-        //             /\.js$/.test(module.resource) &&
-        //             module.resource.indexOf(
-        //                 path.join(__dirname, '/node_modules')
-        //             ) === 0
-        //         );
-        //     }
-        // }),
-        // 抽出mainfest（管理模块交互的文件）
+        // 抽出第三方库，命名vendor
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: function (module) {
+                // 从 node_module 出来的所有模块
+                return (
+                    module.resource &&
+                    /\.js$/.test(module.resource) &&
+                    module.resource.indexOf(
+                        path.join(__dirname, '../node_modules')
+                    ) === 0
+                );
+            }
+        }),
+        // 抽出mainfest（webpack运行代码，管理模块交互）
         new webpack.optimize.CommonsChunkPlugin({ 
             name: 'manifest',
             minChunks: Infinity
@@ -148,7 +149,8 @@ const webpackBaseConfig = {
         }),
         // 提取css
         new ExtractTextPlugin({
-            filename: 'css/[name].[contenthash:7].css',
+            // filename: 'css/[name].[contenthash:7].css',
+            filename: 'css/main.min.[contenthash:7].css',
             // disable: process.env.NODE_ENV === "dev",
             allChunks: true,
         }),
@@ -176,7 +178,7 @@ for(let page in pagesEntries) {
         favicon     : './favicon.ico',  // 图标路径
         inject      : true,             // js文件将被放置在body元素的底部
         // minify      : true,             // 压缩
-        chunks      : ['vendor', 'manifest', 'main', page],   // 引入公共资源和 该页面对应的 js/css 文件
+        chunks      : ['manifest', 'vendor', 'main', page],   // 引入公共资源和 该页面对应的 js/css 文件
         chunksSortMode: 'manual'        // 控制 chunk 的排序。none | auto（默认）| dependency（依赖）| manual（手动）| {function}
     };
     webpackBaseConfig.plugins.push(new HtmlWebpackPlugin(conf));

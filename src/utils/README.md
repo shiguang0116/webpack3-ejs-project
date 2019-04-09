@@ -51,7 +51,7 @@
 #### 3、npm下载
 
 ```
-npm i sg-utils -D
+npm i sg-utils -S
 ```
 
 #### 4、文件说明
