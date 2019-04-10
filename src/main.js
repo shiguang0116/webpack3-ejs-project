@@ -21,7 +21,9 @@ rule.test = new RegExp(rule.test.source.replace('<%', '<\\\?').replace('%>', '\\
 import './styles/main.less';
 
 // 页面公用js类
-import '@/utils';
+import '@/utils/util.js';
+import '@/utils/service.js';
+import '@/utils/filter.js';
 import '@/common/header/header.js';
 import '@/common/footer/footer.js';
 
