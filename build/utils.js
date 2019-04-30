@@ -17,21 +17,20 @@ util.assetsPath = function (_path) {
     return path.posix.join(assetsSubDirectory, _path);
 };
 
-// 获取入口文件
-util.getEntries = function (globPath) {
-    let entries = {};
-    glob.sync(globPath).forEach(function (entry) {
-        let list = entry.split('/');
-        var fileName = list[list.length - 1];
-        let moduleName = fileName.slice(0, fileName.indexOf('.'));
+// 获取文件名以及对应路径
+util.getModules = function (globPath) {
+    const modules = {};
+    glob.sync(globPath).forEach(function (url) {
+        const ext = path.extname(url); // 获取文件后缀
+        const moduleName = path.basename(url, ext); // 获取文件名
         // 文件名不能重复的验证（moduleName 在这里取的是文件名。建议把所有上级目录的文件夹名称（不包括src/pages）拼接而成的名字作为最终文件名）
-        if(entries[moduleName]){
+        if(modules[moduleName]){
             console.error(colors.red(`文件名不能重复使用：${moduleName}。\n`));
             process.exit(1);
         }
-        entries[moduleName] = entry;
+        modules[moduleName] = url;
     });
-    return entries;
+    return modules;
 };
 
 module.exports = util;

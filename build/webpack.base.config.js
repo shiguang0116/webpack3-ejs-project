@@ -10,7 +10,7 @@ const path                = require('path');
 const ExtractTextPlugin   = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin   = require('html-webpack-plugin');
 const CopyWebpackPlugin   = require('copy-webpack-plugin');
-const util                = require('./util.js');
+const util                = require('./utils.js');
 const config              = require('./config.js');
 
 function resolve(_path){
@@ -19,7 +19,7 @@ function resolve(_path){
 
 // 配置
 const webpackBaseConfig = {
-    entry: Object.assign(util.getEntries('./src/pages/**/*.js'),
+    entry: Object.assign(util.getModules('./src/pages/**/*.js'),
         { 'main' : '@/main.js' }
     ),
     output: {
@@ -166,19 +166,19 @@ const webpackBaseConfig = {
 };
 
 // 配置html文件
-const pagesEntries = util.getEntries('./src/pages/**/*.ejs');
-for(let page in pagesEntries) {
-    let pageData = {
-        code : page
+const pages = util.getModules('./src/pages/**/*.ejs');
+for(let pageCode in pages) {
+    const pageData = {
+        code : pageCode
     };
-    let conf = {
+    const conf = {
         pageData    : pageData,
-        template    : pagesEntries[page],
-        filename    : page + '.html',   // 打包后的文件路径
+        template    : pages[pageCode],
+        filename    : pageCode + '.html',   // 打包后的文件路径
         favicon     : './favicon.ico',  // 图标路径
         inject      : true,             // js文件将被放置在body元素的底部
-        // minify      : true,             // 压缩
-        chunks      : ['manifest', 'vendor', 'main', page],   // 引入公共资源和 该页面对应的 js/css 文件
+        // minify      : process.env.NODE_ENV === 'production' ? true : false,   // 压缩
+        chunks      : ['manifest', 'vendor', 'main', pageCode],   // 引入公共资源和 该页面对应的 js/css 文件
         chunksSortMode: 'manual'        // 控制 chunk 的排序。none | auto（默认）| dependency（依赖）| manual（手动）| {function}
     };
     webpackBaseConfig.plugins.push(new HtmlWebpackPlugin(conf));
