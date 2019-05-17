@@ -1,18 +1,18 @@
-'use strict';
-import './index.less';
+'use strict'
+import './index.less'
 
 // 导航
 const nav = {
-    init : function(){
-        this.onLoad();
-        this.bindEvent();
+    init: function() {
+        this.onLoad()
+        this.bindEvent()
     },
-    onLoad : function(){
-        
-    },
-    bindEvent : function(){
-        const self = this;
-    }
-};
+    onLoad: function() {
 
-module.exports = nav.init();
+    },
+    bindEvent: function() {
+        // const self = this
+    }
+}
+
+module.exports = nav.init()
