@@ -24,7 +24,7 @@ const createLintingRule = () => ({
     include: [resolve('src')],
     options: {
         formatter: require('eslint-friendly-formatter'), // 指定错误报告的格式规范
-        emitWarning: true // 输出错误
+        emitWarning: config.lintOnSave !== 'error' // true：在命令行和控制台输出警告，不会使得编译失败 | false：会强制 eslint-loader 将 lint 错误输出为编译错误，同时也意味着 lint 错误将会导致编译失败
     }
 })
 
@@ -40,7 +40,7 @@ const webpackBaseConfig = {
     },
     module: {
         rules: [
-            ...(config.useEslint ? [createLintingRule()] : []),
+            ...(config.lintOnSave ? [createLintingRule()] : []),
             {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({

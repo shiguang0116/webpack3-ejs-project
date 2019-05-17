@@ -7,7 +7,7 @@
     "start": "npm run dev",
     "dev": "webpack-dev-server --config build/webpack.dev.config.js",
     "build": "webpack -p --config build/webpack.prod.config.js",
-    "lint": "eslint --ext .js src",
+    "lint": "eslint --ext .js,.ejs src",
     "stop": "taskkill /f /t /im node.exe"
   },
   "repository": {
