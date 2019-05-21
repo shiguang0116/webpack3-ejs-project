@@ -11,7 +11,7 @@ const merge = require('webpack-merge')
 const config = require('./config.js')
 const webpackBaseConfig = require('./webpack.base.config.js')
 
-fs.writeFile('build/env.js', 'export default "dev";', function(err) {
+fs.writeFile('build/env.js', "export default 'dev';", function(err) {
     err && console.error(err)
 })
 

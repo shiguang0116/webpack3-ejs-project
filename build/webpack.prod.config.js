@@ -12,7 +12,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const merge = require('webpack-merge')
 const webpackBaseConfig = require('./webpack.base.config.js')
 
-fs.writeFile('build/env.js', 'export default "build";', function(err) {
+fs.writeFile('build/env.js', "export default 'build';", function(err) {
     err && console.error(err)
 })
 

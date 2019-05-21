@@ -168,7 +168,7 @@ const webpackBaseConfig = {
         // 复制文件
         new CopyWebpackPlugin([
             {
-                from: resolve('libs/**/*.js'),
+                from: resolve('src/libs/**/*.js'),
                 to: 'js/[name].[ext]',
                 toType: 'template'
             }
